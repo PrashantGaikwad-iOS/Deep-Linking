@@ -44,3 +44,56 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+/*
+ 
+ First App -
+ 
+ Info.plist
+ LSApplicationQueriesSchemes Array
+ item 0 - secondaryApp
+ 
+ Action method -
+ let message = passDataTextField.text?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+ let application = UIApplication.shared
+ let secondAppPath = "secondaryAppDL://secondPage?message=\(message ?? "")"
+ let appUrl = URL(string: secondAppPath)!
+ let websiteUrl = URL(string: "https://www.google.com")!
+ if application.canOpenURL(appUrl) {
+ application.open(appUrl, options: [:], completionHandler: nil)
+ }
+ else{
+ application.open(websiteUrl)
+ }
+ 
+ Second App -
+ 
+ Info.plist
+ URLTypes
+ item 0 enter
+ URL Schemes -
+ item0 - secondaryAppDL
+ 
+ In app delegate -
+ func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+ print(url)
+ let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+ let host = components?.host ?? ""
+ print("Host is \(host)")
+ if host == "secondPage" {
+ let sb = UIStoryboard(name: "Main", bundle: .main)
+ let vc = sb.instantiateViewController(withIdentifier: "SecondViewController") as! SecondViewController
+ vc.messageStr = components?.queryItems?.first?.value
+ window?.rootViewController = vc
+ }
+ else if host == "firstPage" {
+ let sb = UIStoryboard(name: "Main", bundle: .main)
+ window?.rootViewController = sb.instantiateViewController(withIdentifier: "ViewController") as! ViewController
+ }
+ else{
+ print("Entered second app")
+ }
+ return true
+ }
+ 
+ 
+ */
